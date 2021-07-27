@@ -1,0 +1,1031 @@
+  # Juan Antonio Vázquez Morales 
+  #
+  # 14 de junio de 2019
+  # Última modificacion 12 de abril de 2020
+  #
+  # Estas funciones son necesarias para usar el método de Kernel.
+  
+  
+  
+  # Funciones kernel
+  
+  rec=function(t){
+    # Función del kernel rectangular o uniforme.
+    
+    # Parámetros:
+    # t valor(o vector de puntos) a evaluar.
+    
+    # Iniciación de variables.
+    n=length(t);
+    res=rep(0.0,n)
+    
+    # Evaluación.
+    for(i in 1:n){
+      if(-1<=t[i] && t[i]<=1) res[i]=0.5
+    }
+  
+    res
+  }
+  
+  tri=function(t){
+    # Función del kernel triangular.
+    
+    # Parámetros:
+    # t valor(o vector de puntos) a evaluar.
+    
+    # Iniciación de variables.
+    n=length(t);
+    res=rep(0.0,n)
+    
+    # Evaluación.
+    
+    for(i in 1:n){
+      if(-1<=t[i] && t[i]<=1) res[i]=1-abs(t[i])
+    }
+    
+    res
+  }
+  
+  epan=function(t){
+    # Función del kernel Epanechnikov.
+    
+    # Parámetros:
+    # t valor(o vector de puntos) a evaluar.
+    
+    # Iniciación de variables.
+    n=length(t);
+    res=rep(0.0,n)
+    
+    # Evaluación.
+    for(i in 1:n){
+      if(-1<=t[i] && t[i]<=1) res[i]=3.0*(1-t[i]*t[i])/4.0
+    }
+    
+    res
+  }
+  
+  cuar=function(t){
+    # Función del kernel cuártico.
+    
+    # Parámetros:
+    # t valor(o vector de puntos) a evaluar.
+    
+    # Iniciación de variables.
+    n=length(t);
+    res=rep(0.0,n)
+    
+    # Evaluación.
+    for(i in 1:n){
+      if(-1<=t[i] && t[i]<=1) res[i]=15.0*(1-t[i]*t[i])*(1-t[i]*t[i])/16.0
+    }
+    
+    res
+  }
+  
+  arccos=function(t){
+    # Función del kernel arco coseno.
+    
+    # Parámetros:
+    # t valor(o vector de puntos) a evaluar.
+    
+    # Iniciación de variables.
+    n=length(t);
+    res=rep(0.0,n)
+    
+    # Evaluación.
+    for(i in 1:n){
+      if(-1<=t[i] && t[i]<=1) res[i]=pi*cos(pi*t[i]/2)/4.0
+    }
+    
+    res
+  }
+  
+  triwe=function(t){
+    # Función del kernel triweght.
+    
+    # Parámetros:
+    # t valor(o vector de puntos) a evaluar.
+    
+    # Iniciación de variables.
+    n=length(t);
+    res=rep(0.0,n)
+    
+    # Evaluación.
+    for(i in 1:n){
+      if(-1<=t[i] && t[i]<=1) res[i]=35.0*((1-t[i]*t[i])^2)^3.0/32.0
+    }
+    
+    res
+  }
+  
+  
+  
+  # Funciones de densidad
+  
+  fAproxKNor=function(d,h,t){
+    # Función que obtiene f(t) de la aproximación por kernel normal.
+    
+    # d vector de datos.
+    # h ancho de banda.
+    # t punto(vector de puntos) a evaluar.
+    
+    # Iniciación de variables.
+    res = 0
+    n = length(d)
+    
+    # Calculo de f(t).
+    for(i in 1:n) res = res+dnorm((t-d[i])/h)
+    res = res/(n*h)
+  
+    res;
+  }
+  
+  fAproxKRec=function(d,h,t){
+    # Función que obtiene f(t) de la aproximación por kernel uniforme.
+  
+    # Parámetros:
+    # d vector de datos.
+    # h ancho de banda.
+    # t punto(vector de puntos) a evaluar.
+    
+    # Iniciación de variables
+    n = length(d)
+    res =0
+    
+    # Calculo de f(t).
+    for(i in 1:n) res = res + (rec((t-d[i])/h))
+    res = res/(n*h)
+  
+    res
+  }
+  
+  fAproxKTri=function(d,h,t){
+    # Función que obtiene f(t) de la aproximación por kernel triangular.
+    
+    # Parámetros:
+    # d vector de datos.
+    # h ancho de banda.
+    # t punto(vector de puntos) a evaluar.
+    
+    # Iniciación de variables
+    n = length(d)
+    res =0
+    
+    # Calculo de f(t).
+    for(i in 1:n) res=res+(tri((t-d[i])/h))
+    res = res/(n*h)
+    
+    res
+  }
+  
+  fAproxKEpan=function(d,h,t){
+    # Función que obtiene f(t) de la aproximación por kernel Epanechnikov.
+    
+    # Parámetros:
+    # d vector de datos.
+    # h ancho de banda.
+    # t punto(vector de puntos) a evaluar.
+    
+    # Iniciación de variables
+    n = length(d)
+    res =0
+    
+    # Calculo de f(t).
+    for(i in 1:n) res=res+(epan((t-d[i])/h))
+    res = res/(n*h)
+    
+    res
+  }
+  
+  fAproxKCuar=function(d,h,t){
+    # Función que obtiene f(t) de la aproximación por kernel cuártico.
+    
+    # Parámetros:
+    # d vector de datos.
+    # h ancho de banda.
+    # t punto(vector de puntos) a evaluar.
+    
+    # Iniciación de variables
+    n = length(d)
+    res =0
+    
+    # Calculo de f(t).
+    for(i in 1:n) res=res+(cuar((t-d[i])/h))
+    res = res/(n*h)
+    
+    res
+  }
+  
+  fAproxKArccos=function(d,h,t){
+    # Función que obtiene f(t) de la aproximación por kernel arco coseno.
+    
+    # d vector de datos.
+    # h ancho de banda.
+    # t punto(vector de puntos) a evaluar.
+    
+    # Iniciación de variables.
+    res = 0
+    n = length(d)
+    
+    # Calculo de f(t).
+    for(i in 1:n) res=res+(arccos((t-d[i])/h))
+    res = res/(n*h)
+    
+    res;
+  }
+  
+  fAproxKTriwe=function(d,h,t){
+    # Función que obtiene f(t) de la aproximación por kernel triweight.
+    
+    # Parámetros:
+    # d vector de datos.
+    # h ancho de banda.
+    # t punto(vector de puntos) a evaluar.
+    
+    # Iniciación de variables
+    n = length(d)
+    res =0
+    
+    # Calculo de f(t).
+    for(i in 1:n) res=res+(triwe((t-d[i])/h))
+    res = res/(n*h)
+    
+    res
+  }
+  
+  
+  
+  # Funciones graficadoras
+  
+  grafAproxKNor=function(d,h){
+    # Función que grafica aproximación por kernel normal.
+    
+    # Parámetros:
+    # d vector de datos.
+    # h ancho de banda.
+    
+    # Se ordena el vector.
+    d=sort(d)
+    
+    # Se obtiene la longitud.
+    n=length(d)
+    
+    # Limites.
+    a = d[1]
+    b = d[n]
+    
+    # Graficar
+    pntGraf = seq(a-1,b+1,length=10000)
+    plot(pntGraf,fAproxKNor(d,h,pntGraf),type="l",col="black",lwd=1,xlab="X",ylab="f(x)",main="Kernel Normal")
+  }
+  
+  grafAproxKRec=function(d,h){
+    # Función que grafica aproximación por kernel uniforme.
+    
+    # Parametros:
+    # d vector de datos.
+    # h ancho de banda.
+    
+    # Se ordena el vector.
+    d = sort(d)
+    
+    # Se obtiene la longitud.
+    n = length(d)
+    
+    # Limites.
+    a = d[1]
+    b = d[n]
+    
+    # Graficar.
+    pntGraf = seq(a-h,b+h,length=10000)
+    plot(pntGraf,fAproxKRec(d,h,pntGraf),type="l",col="black",lwd=1,xlab="X",ylab="f(x)",main="Kernel Rectangular")
+  }
+  
+  grafAproxKTri=function(d,h){
+    # Función que grafica aproximación por kernel triangular.
+    
+    # Parametros:
+    # d vector de datos.
+    # h ancho de banda.
+    
+    # Se ordena el vector.
+    d = sort(d)
+    
+    # Se obtiene la longitud.
+    n = length(d)
+    
+    # Limites.
+    a = d[1]
+    b = d[n]
+    
+    # Graficar.
+    pntGraf = seq(a-h,b+h,length=10000)
+    plot(pntGraf,fAproxKTri(d,h,pntGraf),type="l",col="black",lwd=1,xlab="X",ylab="f(x)",main="Kernel Triangular")
+  }
+  
+  grafAproxKEpan=function(d,h){
+    # Función que grafica aproximación por kernel Epanechnikov.
+    
+    # Parametros:
+    # d vector de datos.
+    # h ancho de banda.
+    
+    # Se ordena el vector.
+    d = sort(d)
+    
+    # Se obtiene la longitud.
+    n = length(d)
+    
+    # Limites.
+    a = d[1]
+    b = d[n]
+    
+    # Graficar.
+    pntGraf = seq(a-h,b+h,length=10000)
+    plot(pntGraf,fAproxKEpan(d,h,pntGraf),type="l",col="black",lwd=1,xlab="X",ylab="f(x)",main="Kernel de Epanecnikov")
+  }
+  
+  grafAproxKCuar=function(d,h){
+    # Función que grafica aproximación por kernel cuártico.
+    
+    # Parametros:
+    # d vector de datos.
+    # h ancho de banda.
+    
+    # Se ordena el vector.
+    d = sort(d)
+    
+    # Se obtiene la longitud.
+    n = length(d)
+    
+    # Limites.
+    a = d[1]
+    b = d[n]
+    
+    # Graficar.
+    pntGraf = seq(a-h,b+h,length=10000)
+    plot(pntGraf,fAproxKCuar(d,h,pntGraf),type="l",col="black",lwd=1,xlab="X",ylab="f(x)",main="Kernel Cuártico")
+  }
+  
+  grafAproxKArccos=function(d,h){
+    # Función que grafica aproximación por kernel arco coseno.
+    
+    # Parámetros:
+    # d vector de datos.
+    # h ancho de banda.
+    
+    # Se ordena el vector.
+    d = sort(d)
+    
+    # Se obtiene la longitud.
+    n = length(d)
+    
+    # Limites.
+    a = d[1]
+    b = d[n]
+    
+    # Graficar.
+    pntGraf = seq(a-h,b+h,length=10000)
+    plot(pntGraf,fAproxKArccos(d,h,pntGraf),type="l",col="black",lwd=1,xlab="X",ylab="f(x)",main="Kernel Arco coseno")
+  }
+  
+  grafAproxKTriwe=function(d,h){
+    # Función que grafica aproximación por kernel triangular.
+    
+    # Parametros:
+    # d vector de datos.
+    # h ancho de banda.
+    
+    # Se ordena el vector.
+    d = sort(d)
+    
+    # Se obtiene la longitud.
+    n = length(d)
+    
+    # Limites.
+    a = d[1]
+    b = d[n]
+    
+    # Graficar.
+    pntGraf = seq(a-h,b+h,length=10000)
+    plot(pntGraf,fAproxKTriwe(d,h,pntGraf),type="l",col="black",lwd=1,xlab="X",ylab="f(x)",main="Kernel Triweight")
+  }
+  
+  
+  
+  # Funciones para la generación de variables aleatorias continuas para las aproximaciones
+  
+  rAproxKNor=function(n,d,h){
+    # Función que genera valores de una variable aleatoria aproximada por el
+    # kernel normal.
+  
+    # Parámetros:
+    # n número de valores requeridos.
+    # d vector de datos.
+    # h ancho de banda.
+    
+    # iniciación de valores
+    res=rep(0.0,n)
+    a=min(d)
+    b=max(d)
+    
+    # Obtener M, el máximo f(x)
+    pnt=seq(a-3.5,b+3.5,length=10000)
+    M=max(fAproxKNor(d,h,pnt))
+    rm(pnt)
+    
+    # Obtención de valores
+    for(i in 1:n){
+      x1=runif(1,a-3.5,b+3.5)
+      x2=runif(1,0,M)
+      while(x2>fAproxKNor(d,h,x1)){
+        x1=runif(1,a-3.5,b+3.5)
+        x2=runif(1,0,M)
+      }
+      res[i]=x1
+    }
+    
+    res
+  }
+  
+  rAproxKRec=function(n,d,h){
+    # Función que genera valores de una variable aleatoria aproximada por el
+    # kernel uniforme.
+    
+    # Parámetros:
+    # n número de valores requeridos.
+    # d vector de datos.
+    # h ancho de banda.
+    
+    # iniciación de valores
+    res=rep(0.0,n)
+    a=min(d)
+    b=max(d)
+    
+    # Obtener M, el máximo f(x)
+    pnt=seq(a-h,b+h,length=10000)
+    M=max(fAproxKRec(d,h,pnt))
+    rm(pnt)
+    
+    # Obtención de valores
+    for(i in 1:n){
+      x1=runif(1,a-h,b+h)
+      x2=runif(1,0,M)
+      while(x2>fAproxKRec(d,h,x1)){
+        x1=runif(1,a-h,b+h)
+        x2=runif(1,0,M)
+      }
+      res[i]=x1
+    }
+    
+    res
+  }
+  
+  rAproxKTri=function(n,d,h){
+    # Función que genera valores de una variable aleatoria aproximada por el
+    # kernel triangular.
+    
+    # Parámetros:
+    # n número de valores requeridos.
+    # d vector de datos.
+    # h ancho de banda.
+    
+    # iniciación de valores
+    res=rep(0.0,n)
+    a=min(d)
+    b=max(d)
+    
+    # Obtener M, el máximo f(x)
+    pnt=seq(a-h,b+h,length=10000)
+    M=max(fAproxKTri(d,h,pnt))
+    rm(pnt)
+    
+    # Obtención de valores
+    for(i in 1:n){
+      x1=runif(1,a-h,b+h)
+      x2=runif(1,0,M)
+      while(x2>fAproxKTri(d,h,x1)){
+        x1=runif(1,a-h,b+h)
+        x2=runif(1,0,M)
+      }
+      res[i]=x1
+    }
+    
+    res
+  }
+  
+  rAproxKEpan=function(n,d,h){
+    # Función que genera valores de una variable aleatoria aproximada por el
+    # kernel Epanechnikov.
+    
+    # Parámetros:
+    # n número de valores requeridos.
+    # d vector de datos.
+    # h ancho de banda.
+    
+    # iniciación de valores
+    res=rep(0.0,n)
+    a=min(d)
+    b=max(d)
+    
+    # Obtener M, el máximo f(x)
+    pnt=seq(a-h,b+h,length=10000)
+    M=max(fAproxKEpan(d,h,pnt))
+    rm(pnt)
+    
+    # Obtención de valores
+    for(i in 1:n){
+      x1=runif(1,a-h,b+h)
+      x2=runif(1,0,M)
+      while(x2>fAproxKEpan(d,h,x1)){
+        x1=runif(1,a-h,b+h)
+        x2=runif(1,0,M)
+      }
+      res[i]=x1
+    }
+    
+    res
+  }
+  
+  rAproxKCuar=function(n,d,h){
+    # Función que genera valores de una variable aleatoria aproximada por el
+    # kernel cuártico.
+    
+    # Parámetros:
+    # n número de valores requeridos.
+    # d vector de datos.
+    # h ancho de banda.
+    
+    # iniciación de valores
+    res=rep(0.0,n)
+    a=min(d)
+    b=max(d)
+    
+    # Obtener M, el máximo f(x)
+    pnt=seq(a-h,b+h,length=10000)
+    M=max(fAproxKCuar(d,h,pnt))
+    rm(pnt)
+    
+    # Obtención de valores
+    for(i in 1:n){
+      x1=runif(1,a-h,b+h)
+      x2=runif(1,0,M)
+      while(x2>fAproxKCuar(d,h,x1)){
+        x1=runif(1,a-h,b+h)
+        x2=runif(1,0,M)
+      }
+      res[i]=x1
+    }
+    
+    res
+  }
+  
+  rAproxKArccos=function(n,d,h){
+    # Función que genera valores de una variable aleatoria aproximada por el
+    # kernel arco coseno.
+    
+    # Parámetros:
+    # n número de valores requeridos.
+    # d vector de datos.
+    # h ancho de banda.
+    
+    # iniciación de valores
+    res=rep(0.0,n)
+    a=min(d)
+    b=max(d)
+    
+    # Obtener M, el máximo f(x)
+    pnt=seq(a-h,b+h,length=10000)
+    M=max(fAproxKArccos(d,h,pnt))
+    rm(pnt)
+    
+    # Obtención de valores
+    for(i in 1:n){
+      x1=runif(1,a-h,b+h)
+      x2=runif(1,0,M)
+      while(x2>fAproxKArccos(d,h,x1)){
+        x1=runif(1,a-h,b+h)
+        x2=runif(1,0,M)
+      }
+      res[i]=x1
+    }
+    
+    res
+  }
+  
+  rAproxKTriwe=function(n,d,h){
+    # Función que genera valores de una variable aleatoria aproximada por el
+    # kernel triweight.
+    
+    # Parámetros:
+    # n número de valores requeridos.
+    # d vector de datos.
+    # h ancho de banda.
+    
+    # iniciación de valores
+    res=rep(0.0,n)
+    a=min(d)
+    b=max(d)
+    
+    # Obtener M, el máximo f(x)
+    pnt=seq(a-h,b+h,length=10000)
+    M=max(fAproxKTri(d,h,pnt))
+    rm(pnt)
+    
+    # Obtención de valores
+    for(i in 1:n){
+      x1=runif(1,a-h,b+h)
+      x2=runif(1,0,M)
+      while(x2>fAproxKTriwe(d,h,x1)){
+        x1=runif(1,a-h,b+h)
+        x2=runif(1,0,M)
+      }
+      res[i]=x1
+    }
+    
+    res
+  }
+  
+  
+  # Interseccion con intervelo [0,1]
+  
+  InterseccionM11=function(a,b){
+    if( b < -1 | 1<a) x=c(0,0)
+    else{
+      x1=max(c(a,-1))
+      x2=min(c(b,1))
+      x=c(x1,x2)
+    }
+    x
+  }
+  
+  
+  
+  
+  # Funciones que calculan la probabilidad en un intervalo [a,b].
+  
+  ProbABKNor=function(a,b,d,h){
+    # Calculo de probabilidades por aproximación al kernel normal.
+    
+    # Parámetros:
+    # a límite inferior.
+    # b límite superior.
+    # d vector de datos.
+    # h ancho de banda.
+    
+    # Iniciación de valores
+    res=0
+    n=length(d)
+    
+    # Calculo de la integral
+    for(i in 1:n){
+      x=(a-d[i])/h
+      y=(b-d[i])/h
+      if(x != y) res=pnorm(y,0,1)-pnorm(x,0,1) +res 
+    }
+    res/n
+  }
+  
+  ProbABKRec=function(a,b,d,h){
+    # Calculo de probabilidades por aproximación al kernel uniforme.
+    
+    # Parámetros:
+    # a límite inferior.
+    # b límite superior.
+    # d vector de datos.
+    # h ancho de banda.
+    
+    # Iniciación de valores
+    res=0
+    n=length(d)
+    
+    # Calculo de la integral
+    for(i in 1:n){
+      x=InterseccionM11((a-d[i])/h,(b-d[i])/h)
+      if(x[1] != x[2]) res = 0.5*(x[2] - x[1]) + res 
+    }
+    res/n
+  }
+  
+  ProbABKTri=function(a,b,d,h){
+    # Calculo de probabilidades por aproximación al kernel triangular.
+    
+    # Parámetros:
+    # a límite inferior.
+    # b límite superior.
+    # d vector de datos.
+    # h ancho de banda.
+    
+    # Iniciación de valores
+    res=0
+    n=length(d)
+    
+    # Calculo de la integral
+    for(i in 1:n){
+      x=InterseccionM11((a-d[i])/h,(b-d[i])/h)
+      if(x[1] != x[2]){
+        if(x[2]<=0) res= x[2] -x[1] +(x[2]^2 - x[1]^2)/2.0 + res
+        else{
+          if(0<=x[1]) res= x[2] -x[1] +(x[1]^2-x[2]^2)/2.0 + res
+          else res= x[2] -x[1] -(x[1]^2+x[2]^2)/2.0 + res
+        }
+      }
+    }
+    res/n
+  }
+  
+  ProbABKEpan=function(a,b,d,h){
+    # Calculo de probabilidades por aproximación al kernel Epanechnikov.
+    
+    # Parámetros:
+    # a límite inferior.
+    # b límite superior.
+    # d vector de datos.
+    # h ancho de banda.
+    
+    # Iniciación de valores
+    res=0
+    n=length(d)
+    
+    # Calculo de la integral
+    for(i in 1:n){
+      x=InterseccionM11((a-d[i])/h,(b-d[i])/h)
+      if(x[1] != x[2]) res=x[2]-x[1]+(x[1]^3-x[2]^3)/3.0+res
+    }
+    3*res/(4.0*n)
+  }
+  
+  ProbABKCuar=function(a,b,d,h){
+    # Calculo de probabilidades por aproximación al kernel Cuártico.
+    
+    # Parámetros:
+    # a límite inferior.
+    # b límite superior.
+    # d vector de datos.
+    # h ancho de banda.
+    
+    # Iniciación de valores
+    res=0
+    n=length(d)
+    
+    # Calculo de la integral
+    for(i in 1:n){
+      x=InterseccionM11((a-d[i])/h,(b-d[i])/h)
+      if(x[1] != x[2]) res=(x[2]^5-x[1]^5)/5.0+2*(x[1]^3-x[2]^3)/3.0+x[2]-x[1]+res
+    }
+    15*res/(16.0*n)
+  }
+  
+  ProbABKArccos=function(a,b,d,h){
+    # Calculo de probabilidades por aproximación al kernel Arco coseno.
+    
+    # Parámetros:
+    # a límite inferior.
+    # b límite superior.
+    # d vector de datos.
+    # h ancho de banda.
+    
+    # Iniciación de valores
+    res=0
+    n=length(d)
+    
+    # Calculo de la integral
+    for(i in 1:n){
+      x=InterseccionM11((a-d[i])/h,(b-d[i])/h)
+      if(x[1] != x[2]) res=sin(pi*x[2]/2.0)-sin(pi*x[1]/2.0)+res
+    }
+    res/(2.0*n)
+  }
+  
+  ProbABKTriwe=function(a,b,d,h){
+    # Calculo de probabilidades por aproximación al kernel Epanechnikov.
+    
+    # Parámetros:
+    # a límite inferior.
+    # b límite superior.
+    # d vector de datos.
+    # h ancho de banda.
+    
+    # Iniciación de valores
+    res=0
+    n=length(d)
+    
+    # Calculo de la integral
+    for(i in 1:n){
+      x=InterseccionM11((a-d[i])/h,(b-d[i])/h)
+      if(x[1] != x[2]) res=(x[1]^7-x[2]^7)/7.0+3.0*(x[2]^5-x[1]^5)/5.0+x[1]^3-x[2]^3+x[2]-x[1]+res
+    }
+    35.0*res/(32.0*n)
+  }
+  
+  
+  
+  # Discretizacion de las valores aleatorias aproximadas
+  
+  DiscreKRec=function(n,d,h){
+    # Cálculo de la función de densidad de la aproximacion por el kernel normal
+    
+    # Parámetros:
+    # n número de intervalos en el que se desea dividir el rango.
+    # d vector de datos.
+    # h ancho de banda.
+    
+    # Iniciación de valores
+    A=seq(min(d)-h,max(d)+h,length=n+1)
+    B=matrix(0,2,n)
+    
+    # LLenado de la matriz
+    for(i in 1:n){
+      B[1,i]=(A[i]+A[i+1])/2.0
+      B[2,i]=ProbABKRec(A[i],A[i+1],d,h)
+    }
+    # Eliminar datos cuya probabilidad sea 0
+    i=1
+    while(i<=n){
+      if(B[2,i]==0){
+        B=B[,-i]
+        n=n-1
+      }
+      else i=i+1
+    }
+    
+    B
+  }
+  
+  DiscreKTri=function(n,d,h){
+    # Cálculo de la función de densidad de la aproximacion por el kernel triangular
+    
+    # Parámetros:
+    # n número de intervalos en el que se desea dividir el rango.
+    # d vector de datos.
+    # h ancho de banda.
+    
+    # Iniciación de valores
+    A=seq(min(d)-h,max(d)+h,length=n+1)
+    B=matrix(0,2,n)
+    
+    # LLenado de la matriz
+    for(i in 1:n){
+      B[1,i]=(A[i]+A[i+1])/2.0
+      B[2,i]=ProbABKTri(A[i],A[i+1],d,h)
+    }
+    # Eliminar datos cuya probabilidad sea 0
+    i=1
+    while(i<=n){
+      if(B[2,i]==0){
+        B=B[,-i]
+        n=n-1
+      }
+      else i=i+1
+    }
+    
+    B
+  }
+  
+  DiscreKEpan=function(n,d,h){
+    # Cálculo de la función de densidad de la aproximacion por el kernel Epanechnikov
+    
+    # Parámetros:
+    # n número de intervalos en el que se desea dividir el rango.
+    # d vector de datos.
+    # h ancho de banda.
+    
+    # Iniciación de valores
+    A=seq(min(d)-h,max(d)+h,length=n+1)
+    B=matrix(0,2,n)
+    
+    # LLenado de la matriz
+    for(i in 1:n){
+      B[1,i]=(A[i]+A[i+1])/2.0
+      B[2,i]=ProbABKEpan(A[i],A[i+1],d,h)
+    }
+    # Eliminar datos cuya probabilidad sea 0
+    i=1
+    while(i<=n){
+      if(B[2,i]==0){
+        B=B[,-i]
+        n=n-1
+      }
+      else i=i+1
+    }
+    
+    B
+  }
+  
+  DiscreKCuar=function(n,d,h){
+    # Cálculo de la función de densidad de la aproximacion por el kernel Epanechnikov
+    
+    # Parámetros:
+    # n número de intervalos en el que se desea dividir el rango.
+    # d vector de datos.
+    # h ancho de banda.
+    
+    # Iniciación de valores
+    A=seq(min(d)-h,max(d)+h,length=n+1)
+    B=matrix(0,2,n)
+    
+    # LLenado de la matriz
+    for(i in 1:n){
+      B[1,i]=(A[i]+A[i+1])/2.0
+      B[2,i]=ProbABKCuar(A[i],A[i+1],d,h)
+    }
+    # Eliminar datos cuya probabilidad sea 0
+    i=1
+    while(i<=n){
+      if(B[2,i]==0){
+        B=B[,-i]
+        n=n-1
+      }
+      else i=i+1
+    }
+    
+    B
+  }
+  
+  DiscreKArccos=function(n,d,h){
+    # Cálculo de la función de densidad de la aproximacion por el kernel Epanechnikov
+    
+    # Parámetros:
+    # n número de intervalos en el que se desea dividir el rango.
+    # d vector de datos.
+    # h ancho de banda.
+    
+    # Iniciación de valores
+    A=seq(min(d)-h,max(d)+h,length=n+1)
+    B=matrix(0,2,n)
+    
+    # LLenado de la matriz
+    for(i in 1:n){
+      B[1,i]=(A[i]+A[i+1])/2.0
+      B[2,i]=ProbABKArccos(A[i],A[i+1],d,h)
+    }
+    # Eliminar datos cuya probabilidad sea 0
+    i=1
+    while(i<=n){
+      if(B[2,i]==0){
+        B=B[,-i]
+        n=n-1
+      }
+      else i=i+1
+    }
+    
+    B
+  }
+  
+  DiscreKTriwe=function(n,d,h){
+    # Cálculo de la función de densidad de la aproximacion por el kernel triangular
+    
+    # Parámetros:
+    # n número de intervalos en el que se desea dividir el rango.
+    # d vector de datos.
+    # h ancho de banda.
+    
+    # Iniciación de valores
+    A=seq(min(d)-h,max(d)+h,length=n+1)
+    B=matrix(0,2,n)
+    
+    # LLenado de la matriz
+    for(i in 1:n){
+      B[1,i]=(A[i]+A[i+1])/2.0
+      B[2,i]=ProbABKTriwe(A[i],A[i+1],d,h)
+    }
+    # Eliminar datos cuya probabilidad sea 0
+    i=1
+    while(i<=n){
+      if(B[2,i]==0){
+        B=B[,-i]
+        n=n-1
+      }
+      else i=i+1
+    }
+    
+    B
+  }
+  
+  
+  # Función que genera valores aleatorios de densidades discretas finitas.
+  
+  rDistrDiscr=function(n,D){
+    # Función que genera numeros aleatorias de una distribucion discreta finita.
+    
+    # Parametros:
+    # n número de valores requeridos.
+    # D matriz que contiene en primera fila los valores y en la segunda sus probabilidades.
+    
+    
+    # Iniciazion de variables
+    V=rep(0.0,n)
+    
+    # Obtención de valores
+    for(i in 1:n){
+      x=1
+      u=runif(1)
+      p=D[2,1]
+      while(u>=p){
+        x=x+1
+        p=D[2,x]+p
+      }
+      V[i]=D[1,x]
+    }
+    V
+  }
